@@ -1,25 +1,70 @@
-import logo from './logo.svg';
-import './App.css';
+import Amplify, { Auth } from "aws-amplify";
+import awsconfig from "./aws-exports";
+import { withAuthenticator } from "@aws-amplify/ui-react";
+
+import logo from "./logo.svg";
+import "./App.css";
+import { useEffect, useState } from "react";
+
+Amplify.configure(awsconfig);
 
 function App() {
+  const [files, setFiles] = useState([]);
+
+  const getAllFiles = async () => {
+    const cogUserId = await Auth.currentSession();
+    const resp = await fetch(`https://uvn8m8dpn6.execute-api.us-west-2.amazonaws.com/prod/v1/allfiles`, {
+      method: "GET",
+      mode: "cors",
+      headers: {
+        Authorization: cogUserId?.idToken?.jwtToken
+      }
+    });
+    const respData = await resp.json();
+    setFiles(respData.Items);
+  };
+
+  useEffect(() => {
+    getAllFiles();
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <table>
+        <tr>
+          <th>Name</th>
+          <th>User</th>
+          <th>Last modified</th>
+          <th>Actions</th>
+        </tr>
+        {files.map((file) => (
+          <tr>
+            <td>{file.name}</td>
+            <td>{file.userId}</td>
+            <td>{file.lastModifiedTime}</td>
+            <td>
+              <button
+                onClick={async () => {
+                  const cogUserId = await Auth.currentSession();
+                  await fetch(
+                    `https://uvn8m8dpn6.execute-api.us-west-2.amazonaws.com/prod/v1/allfiles?fileid=${file.fileId}`,
+                    {
+                      method: "DELETE",
+                      mode: "cors",
+                      headers: {
+                        Authorization: cogUserId?.idToken?.jwtToken
+                      }
+                    }
+                  );
+                }}>
+                Delete
+              </button>
+            </td>
+          </tr>
+        ))}
+      </table>
     </div>
   );
 }
 
-export default App;
+export default withAuthenticator(App);
