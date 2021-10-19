@@ -4,6 +4,8 @@ import awsconfig from "./aws-exports";
 import { withAuthenticator, AmplifySignOut } from "@aws-amplify/ui-react";
 import "./App.css";
 
+import FallCrateLogo from "./assets/fallcreatesadmin.png";
+
 Amplify.configure(awsconfig);
 
 function App() {
@@ -28,8 +30,14 @@ function App() {
 
   return (
     <div className="App">
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <h1>FallCreates Admin Portal</h1>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          padding: "10px 0px 15px 0px"
+        }}>
+        <img src={FallCrateLogo} alt="Fall Crates" width="225px" />
         <AmplifySignOut />
       </div>
       <table>
