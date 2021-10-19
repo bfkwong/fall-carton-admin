@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Amplify, { Auth } from "aws-amplify";
 import awsconfig from "./aws-exports";
-import { withAuthenticator } from "@aws-amplify/ui-react";
+import { withAuthenticator, AmplifySignOut } from "@aws-amplify/ui-react";
 import "./App.css";
 
 Amplify.configure(awsconfig);
@@ -28,6 +28,10 @@ function App() {
 
   return (
     <div className="App">
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <h1>FallCreates Admin Portal</h1>
+        <AmplifySignOut />
+      </div>
       <table>
         <tr>
           <th>Name</th>
