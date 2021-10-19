@@ -1,10 +1,8 @@
+import { useEffect, useState } from "react";
 import Amplify, { Auth } from "aws-amplify";
 import awsconfig from "./aws-exports";
 import { withAuthenticator } from "@aws-amplify/ui-react";
-
-import logo from "./logo.svg";
 import "./App.css";
-import { useEffect, useState } from "react";
 
 Amplify.configure(awsconfig);
 
@@ -56,6 +54,7 @@ function App() {
                       }
                     }
                   );
+                  getAllFiles();
                 }}>
                 Delete
               </button>
